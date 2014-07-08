@@ -1,6 +1,6 @@
 {
   "name": "json",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "JSON command line processing toolkit.",
   "author": "Zachary Poley <zpoley@gmail.com> (http://zpoley.net)",
   "contributors": [
