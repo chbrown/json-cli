@@ -18,7 +18,7 @@
   "man": "./man/json.1",
   "repository": {
     "type": "git",
-    "url": "git://github.com/zpoley/json-command.git"
+    "url": "git://github.com/chbrown/json-cmd.git"
   },
   "bin": {
     "json": "./index.js"

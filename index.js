@@ -61,7 +61,7 @@ JSON.Command.prototype.printhelp = function() {
   console.log("  curl http://search.twitter.com/search.json?q=node.js 2> /dev/null |");
   console.log("   json -o results -C from_user from_user_id text\n");
   console.log("more help:\n");
-  console.log("  use \"man json\" or visit http://github.com/zpoley/json-command\n");
+  console.log("  use \"man json\" or visit http://github.com/chbrown/json-cmd\n");
   process.exit();
 };
 
