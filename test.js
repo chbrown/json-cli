@@ -1,23 +1,25 @@
-var assert = require("assert"),
-    jsonCommand = require("../lib/jsonCommand");
+#!/usr/bin/env node
+/*jslint node: true */
+var assert = require("assert");
+var jsonCommand = require("./");
 
 var testObj = {
-  id : 19375093,
-  text : "who knows",
-  user : {
-    id : 1310571,
-    name : "foo"
+  id: 19375093,
+  text: "who knows",
+  user: {
+    id: 1310571,
+    name: "foo"
   },
-  arr1 : [
+  arr1: [
     'a', 'b', 'c'
   ],
-  obj1 : {
-    arr2 : [ 
+  obj1: {
+    arr2: [
       'd', 'e', 'f'
     ]
   },
-  created_at : 127817599,
-  zero : 0
+  created_at: 127817599,
+  zero: 0
 };
 
 function printTestName(testName) {
@@ -31,8 +33,8 @@ function printTestName(testName) {
     printTestName("testProcessArgs");
 
     var jsonC = new JSON.Command();
-    var conditions = [ "(name == 'foo')", "(text == 'boo')" ];
-    jsonC.processArgs([ "-c", conditions[0], "-c", conditions[1] ]);
+    var conditions = ["(name == 'foo')", "(text == 'boo')"];
+    jsonC.processArgs(["-c", conditions[0], "-c", conditions[1]]);
     assert.equal(jsonC.conditionals[0], conditions[0],
       "conditionals contains specified conditional [0]");
     assert.equal(jsonC.conditionals[1], conditions[1],
@@ -44,14 +46,14 @@ function printTestName(testName) {
     printTestName("testCreateRequestedKeys");
 
     var jsonC = new JSON.Command();
-    jsonC.processArgs([ "newKey" ]);
+    jsonC.processArgs(["newKey"]);
     jsonC.createRequestedKeys(testObj);
 
     assert.equal(testObj.newKey, null,
       "createRequestedKeys adds requested key to object");
 
     jsonC = new JSON.Command();
-    jsonC.processArgs([ "zero" ]);
+    jsonC.processArgs(["zero"]);
     jsonC.createRequestedKeys(testObj);
 
     assert.equal(testObj.zero, 0,
@@ -64,13 +66,13 @@ function printTestName(testName) {
     printTestName("testCheckConditionals");
 
     var jsonC = new JSON.Command();
-    jsonC.processArgs([ "-c", "(name == 'foo')"]);
+    jsonC.processArgs(["-c", "(name == 'foo')"]);
 
     assert.equal(jsonC.checkConditionals(testObj), false,
       "checkConditionals (name=='foo') is false");
 
     jsonC = new JSON.Command();
-    jsonC.processArgs([ "-c", "(user.name == 'foo')"]);
+    jsonC.processArgs(["-c", "(user.name == 'foo')"]);
 
     assert.equal(jsonC.checkConditionals(testObj), true,
       "checkConditionals (user.name=='foo') is true");
@@ -80,14 +82,17 @@ function printTestName(testName) {
     printTestName("testProcessKeyTransforms");
 
     var tmpTestObj = {
-      id : 19375093, text : "who knows", created_at : 127817599,
-      user : {
-        id : 1310571, name : "foo"
+      id: 19375093,
+      text: "who knows",
+      created_at: 127817599,
+      user: {
+        id: 1310571,
+        name: "foo"
       }
     };
 
     var jsonC = new JSON.Command();
-    jsonC.processArgs([ "user.new_name=user.name", "-d"]);
+    jsonC.processArgs(["user.new_name=user.name", "-d"]);
     jsonC.createRequestedKeys(tmpTestObj);
     jsonC.processKeyTransforms(tmpTestObj);
 
@@ -100,14 +105,17 @@ function printTestName(testName) {
     printTestName("testProcessExecutables");
 
     var tmpTestObj = {
-      id : 19375093, text : "who knows", created_at : 127817599,
-      user : {
-        id : 1310571, name : "foo"
+      id: 19375093,
+      text: "who knows",
+      created_at: 127817599,
+      user: {
+        id: 1310571,
+        name: "foo"
       }
     };
 
     var jsonC = new JSON.Command();
-    jsonC.processArgs([ "-e", "user.name = 'boo';"]);
+    jsonC.processArgs(["-e", "user.name = 'boo';"]);
     jsonC.processExecutables(tmpTestObj);
 
     assert.equal(tmpTestObj.user.name, "boo",
@@ -118,7 +126,7 @@ function printTestName(testName) {
     printTestName("testProcessKeys");
 
     var jsonC = new JSON.Command();
-    jsonC.processArgs([ "user.name", "text", "arr1[1]", "obj1.arr2[2]" ]);
+    jsonC.processArgs(["user.name", "text", "arr1[1]", "obj1.arr2[2]"]);
     assert.equal(jsonC.keys.length, 4,
       "processedKeys keys length == 4");
 
@@ -137,7 +145,8 @@ function printTestName(testName) {
     assert.equal(resObj.arr1[0], testObj.arr1[1],
       "processKeys result object arr1[0] = testObj.arr1[0] is true");
     assert.equal(resObj.obj1.arr2[0], testObj.obj1.arr2[2],
-      "processKeys result object obj1.arr2[0] = testObj.obj1.arr2[2] is true");
+      "processKeys result object obj1.arr2[0] = testObj.obj1.arr2[2] is true"
+    );
 
   })();
 
@@ -145,18 +154,28 @@ function printTestName(testName) {
     printTestName("testLeadingComma");
 
     var jsonC = new JSON.Command();
-    jsonC.processArgs([ "-," ]);
+    jsonC.processArgs(["-,"]);
 
     assert.equal(jsonC.stringify(testObj),
       '{ "id": 19375093\n, "text": "who knows"\n, "user":\n  { "id": 1310571\n  , "name": "foo"\n  }\n, "arr1":\n  [ "a"\n  , "b"\n  , "c"\n  ]\n, "obj1":\n  { "arr2":\n    [ "d"\n    , "e"\n    , "f"\n    ]\n  }\n, "created_at": 127817599\n, "zero": 0\n}',
-      "Leading-comma output selection works and formats test object correctly");
+      "Leading-comma output selection works and formats test object correctly"
+    );
 
-    assert.equal(jsonC.stringify([[]]), "[ []\n]",
+    assert.equal(jsonC.stringify([
+        []
+      ]), "[ []\n]",
       "Leading-comma output nests arrays correctly");
 
-    assert.equal(jsonC.stringify({"":[{"deep":{"null":null}}]}),
+    assert.equal(jsonC.stringify({
+        "": [{
+          "deep": {
+            "null": null
+          }
+        }]
+      }),
       '{ "":\n  [ { "deep":\n      { "null": null\n      }\n    }\n  ]\n}',
-      "Leading-comma output nests deep object/array combinations correctly");
+      "Leading-comma output nests deep object/array combinations correctly"
+    );
 
   })();
 

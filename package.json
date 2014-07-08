@@ -1,17 +1,29 @@
-{ "name": "json"
-, "version": "0.0.14"
-, "engines": [ "node >=0.4.0" ]
-, "description": "JSON command line processing toolkit."
-, "author": "Zachary Poley <zpoley@gmail.com> (http://zpoley.net)"
-, "contributors": [ "Isaac Schlueter <i@izs.me> (http://blog.izs.me)", "Andrey Tarantsov <andreyvit@gmail.com> (http://www.tarantsov.com/)", "Niek Schmoller <niek.schmoller@helderberg.nl> (http://helderberg.nl)", "Ryunosuke SATO (http://d.hatena.ne.jp/tricknotes/)", "Johan Sundström (http://ecmanaut.blogspot.com/)" ]
-, "keywords" : [ "json", "command", "shell" ]
-, "man" : "./man/json.1"
-, "repository":
-  { "type" : "git"
-  , "url" : "https://github.com/zpoley/json-command.git"
-  }
-, "bin" : { "json" : "./bin/json.js" }
-, "scripts":
-  { "test" : "node test/test.js"
+{
+  "name": "json",
+  "version": "0.0.14",
+  "description": "JSON command line processing toolkit.",
+  "author": "Zachary Poley <zpoley@gmail.com> (http://zpoley.net)",
+  "contributors": [
+    "Isaac Schlueter <i@izs.me> (http://blog.izs.me)",
+    "Andrey Tarantsov <andreyvit@gmail.com> (http://www.tarantsov.com/)",
+    "Niek Schmoller <niek.schmoller@helderberg.nl> (http://helderberg.nl)",
+    "Ryunosuke SATO (http://d.hatena.ne.jp/tricknotes/)",
+    "Johan Sundström (http://ecmanaut.blogspot.com/)"
+  ],
+  "keywords": [
+    "json",
+    "command",
+    "shell"
+  ],
+  "man": "./man/json.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/zpoley/json-command.git"
+  },
+  "bin": {
+    "json": "./index.js"
+  },
+  "scripts": {
+    "test": "node test.js"
   }
 }

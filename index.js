@@ -1,9 +1,7 @@
-var util = require("util"),
-    vm = require("vm");
-
-/*
- JSON Command class 
-*/
+#!/usr/bin/env node
+/*jslint node: true */
+var util = require("util");
+var vm = require("vm");
 
 JSON.Command = function(args) {
   this.args = null;
@@ -166,7 +164,7 @@ JSON.Command.prototype.processArgs = function processArgs(args) {
         if (arg.match("=")) {
           var kk = arg.split("=");
           this.keys.push(kk[0]);
-          this.transformedKeys.push({ 
+          this.transformedKeys.push({
             newKey : kk[0],
             oldKey : kk[1]
           });
@@ -175,7 +173,7 @@ JSON.Command.prototype.processArgs = function processArgs(args) {
           this.keys.push(arg);
         }
         break;
-    } 
+    }
   }
 };
 
@@ -202,8 +200,8 @@ JSON.Command.prototype.checkConditionals = function(parsedObject) {
     try {
       var conditionsFailed = false;
       for(var i = 0; (i < this.conditionals.length); i++) {
-        if (!vm.runInNewContext(this.conditionals[i], parsedObject)) { 
-          conditionsFailed = true; 
+        if (!vm.runInNewContext(this.conditionals[i], parsedObject)) {
+          conditionsFailed = true;
         }
       }
       // if any conditions failed return false
@@ -227,7 +225,7 @@ JSON.Command.prototype.checkConditionals = function(parsedObject) {
 JSON.Command.prototype.processKeyTransforms = function(parsedObject) {
   if (this.transformedKeys.length) {
     for(var i = 0; (i < this.transformedKeys.length); i++) {
-      try { 
+      try {
         vm.runInNewContext(this.transformedKeys[i].newKey +
           " = " + this.transformedKeys[i].oldKey, parsedObject);
       }
@@ -245,7 +243,7 @@ JSON.Command.prototype.processKeyTransforms = function(parsedObject) {
 JSON.Command.prototype.processExecutables = function(parsedObject) {
   if (this.executables.length) {
     for(var i = 0; (i < this.executables.length); i++) {
-      try { 
+      try {
         vm.runInNewContext(this.executables[i], parsedObject);
       }
       catch (ex) {
@@ -269,7 +267,7 @@ JSON.Command.prototype.processExecutables = function(parsedObject) {
     2. Create each object necessary in the chain in order for the resulting
      object to retain the same structure of the parsedObject.
      (arrays and dictionaries require separate handling)
-    3. Assign each requested key value from the parsedObject into the new 
+    3. Assign each requested key value from the parsedObject into the new
      object. (arrays and dictionaries require separate handling)
 
 */
@@ -288,7 +286,7 @@ JSON.Command.prototype.processKeys = function(parsedObject) {
       cols.push(eval("parsedObject." + key));
     }
     for (var i = 0; (i < this.keys.length); i++) {
-      try { 
+      try {
         if ((this.keys[i].indexOf(".") > -1) || (this.keys[i].indexOf("[") > -1)) {
           // create any keys that don't exist in the object chain
           if (this.keys[i].indexOf(".") > -1) {
@@ -358,7 +356,7 @@ JSON.Command.prototype.processObjects = function(objects) {
 
   try {
     for (var i = 0; (i < (objects.length)); i++) {
-      // if there's no object, there's nothing to do 
+      // if there's no object, there's nothing to do
       //  (null object is not the same as string null)
       if ((objects[i] == null) || (objects[i] == undefined)) { continue; }
 
@@ -374,7 +372,7 @@ JSON.Command.prototype.processObjects = function(objects) {
         }
       } catch(ex) {
         // discard bad records
-        this.printex(ex); 
+        this.printex(ex);
         continue;
       }
 
@@ -389,7 +387,7 @@ JSON.Command.prototype.processObjects = function(objects) {
 
       // continue if any conditionals fail on this parsedObject
       if (!this.checkConditionals(parsedObject)) {
-        continue; 
+        continue;
       }
 
       try {
@@ -430,9 +428,9 @@ JSON.Command.prototype.processInput = function() {
       if (this.jsonC.inputIsArray) return;
 
       var objects = null;
-      if (this.jsonC.buffer.match(/\n/g) || 
-          this.jsonC.buffer.match(/\r\n/g) || 
-          this.jsonC.buffer.match(/\0/g) || 
+      if (this.jsonC.buffer.match(/\n/g) ||
+          this.jsonC.buffer.match(/\r\n/g) ||
+          this.jsonC.buffer.match(/\0/g) ||
           this.jsonC.buffer.match("}{")) {
         if (this.jsonC.buffer.match(/\n/g)) {
           objects = this.jsonC.buffer.split("\n");
@@ -477,3 +475,12 @@ JSON.Command.prototype.processInput = function() {
     });
   }
 };
+
+if (require.main === module) {
+  var args = process.argv.slice(0);
+  // shift off node and script name
+  args.shift();
+  args.shift();
+
+  new JSON.Command(args).processInput();
+}
